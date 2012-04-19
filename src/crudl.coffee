@@ -1,64 +1,83 @@
-
-module.exports = (model, tie, detach) ->
+class Crudl
+#
+  constructor: (@model, @tie, @detach) ->
+    @table = @model.table
 
   # create and show an instance
-  create: (instance, onSuccess) ->
-    cId = @user.clientId
-    client = @now.client
-    console.log "#{cId}: create #{model.table} instance #{instance.title}"
-
-    success = (i) ->
-      message = "#{cId}: #{model.table} instance #{i.id} created"
+  create: (client, cId, instance, onSuccess) ->
+    console.log "#{cId}: create #{@table} instance #{instance.title}"
+    success = (i) =>
+      message = "#{cId}: #{@table} instance #{i.id} created"
       console.log message
-      onSuccess message, detach i
-    error = (error) ->
-      message = "#{model.table} instance creation failed: #{error}"
+      onSuccess message, @detach i
+    error = (error) =>
+      message = "#{@table} instance creation failed: #{error}"
       console.error "#{cId}: #{message}"
       client.alert message
-    model.create tie(instance), success, error
+    @model.create @tie(instance), success, error
 
   # update and show an instance
-  update: (id, values, onSuccess) ->
-    cId = @user.clientId
-    client = @now.client
-    console.log "#{cId}: update #{model.table} instance #{id}"
-
-    success = (i) ->
-      message = "#{cId}: #{model.table} instance #{i.id} updated"
+  update: (client, cId, id, values, onSuccess) ->
+    console.log "#{cId}: update #{@table} instance #{id}"
+    success = (i) =>
+      message = "#{cId}: #{@table} instance #{i.id} updated"
       console.log message
-      onSuccess message, detach i
-    error = (error) ->
-      message = "#{model.table} instance #{id} update failed: #{error}"
+      onSuccess message, @detach i
+    error = (error) =>
+      message = "#{@table} instance #{id} update failed: #{error}"
       console.error "#{cId}: #{message}"
       client.alert message
-    model.update id, tie(values), success, error
+    @model.update id, @tie(values), success, error
 
   # delete an instance
-  delete: (id, onSuccess) ->
-    cId = @user.clientId
-    client = @now.client
-    console.log "#{cId}: delete #{model.table} instance #{id}"
-
-    success = (i) ->
-      message = "#{cId}: #{model.table} instance #{i.id} deleted"
+  destroy: (client, cId, id, onSuccess) ->
+    console.log "#{cId}: delete #{@table} instance #{id}"
+    success = (i) =>
+      message = "#{cId}: #{@table} instance #{i.id} deleted"
       console.log message
       onSuccess message, i.id
-    error = (error) ->
-      message = "#{model.table} instance #{id} delete failed: #{error}"
+    error = (error) =>
+      message = "#{@table} instance #{id} delete failed: #{error}"
       console.error "#{cId}: #{message}"
       client.alert message
-    model.delete id, success, error
+    @model.destroy id, success, error
 
   # list all instances
-  list: (showList) ->
-    cId = @user.clientId
-    client = @now.client
-    console.log "#{cId} list #{model.table}"
-
-    success = (list) -> showList (detach i for i in list)
-    error = (error) ->
-      message = "#{model.table} list failed: #{error}"
+  all: (client, cId, showList) ->
+    console.log "#{cId} list #{@table}"
+    success = (list) => showList (@detach i for i in list)
+    error = (error) =>
+      message = "#{@table} list failed: #{error}"
       console.error "#{cId}: #{message}"
       client.alert message
+    @model.all success, error
 
-    model.all success, error
+  # list filtered instances
+  #q = where: title: terms.API.title
+  list: (client, cId, query, showList) ->
+    console.log "#{cId} list #{@table}"
+    success = (list) => showList (@detach i for i in list)
+    error = (error) =>
+      message = "#{@table} list failed: #{error}"
+      console.error "#{cId}: #{message}"
+      client.alert message
+    @model.list query, success, error
+
+module.exports = (model, tie, detach) ->
+#
+  crudl = new Crudl model, tie, detach
+
+  create: (instance, onSuccess) ->
+    crudl.create @now.client, @user.clientId, instance, onSuccess
+
+  update: (id, values, onSuccess) ->
+    crudl.update @now.client, @user.clientId, id, values, onSuccess
+
+  destroy: (id, onSuccess) ->
+    crudl.destroy @now.client, @user.clientId, id, onSuccess
+
+  all: (showList) ->
+    crudl.all @now.client, @user.clientId, showList
+
+  list: (query, showList) ->
+    crudl.list @now.client, @user.clientId, query, showList

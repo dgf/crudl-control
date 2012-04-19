@@ -1,6 +1,6 @@
 {
     "name": "crudl-control"
-  , "version": "0.0.1"
+  , "version": "0.1.0"
   , "author": "Danny Gräf <github@dagnu.de>"
 
   , "keywords": ["CRUD", "generic", "control", "coffeescript"]
@@ -24,7 +24,7 @@
     , "sqlite3": "2.1.x"
     , "express": "2.5.x"
     , "now": "0.7.x"
-    , "crudl-model": "0.0.x"
+    , "crudl-model": "0.1.x"
   }
 
   , "engines": {
@@ -34,6 +34,5 @@
   , "scripts": {
       "pretest": "cake build"
     , "prepublish": "cake build"
-    , "test": "cake spec"
   }
 }

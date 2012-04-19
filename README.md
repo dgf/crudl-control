@@ -9,7 +9,7 @@ lifts a [crudl-model](http://github.com/dgf/crudl-model) to the web
     everyone.now.yourApp =
 
       # use direct delegate to prevent scope
-      persons: personCrudl.list
+      persons: personCrudl.all
 
       # or apply nowjs scope manually
       savePerson: (values, onSuccess) ->
