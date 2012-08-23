@@ -1,3 +1,4 @@
+[![build status](https://secure.travis-ci.org/dgf/crudl-control.png)](http://travis-ci.org/dgf/crudl-control)
 # CRUDL now express - a websocket CRUD delegate
 
 lifts a [crudl-model](http://github.com/dgf/crudl-model) to the web
